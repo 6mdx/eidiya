@@ -22,7 +22,7 @@ function Home() {
             <TypingAnimation delay={1500} duration={50} className="text-3xl font-bold">إستقبل العيديات المعنوية وخليك من الماديات ✨</TypingAnimation>
             <BlurFade delay={3.8} duration={0.6} inView>سوي لك رابط وأرسله لمتابعينك، أو اصحابك أو اي أحد، وراح يعيدون عليك صوتياً او نصيا أو كتابة بخط اليد بدون ماتعرف مين هذا الشخص، ليش ما تقدر تعرفه مدري لاتسألني.</BlurFade>
           </div>
-          <BlurFade direction="down" delay={4.5} duration={0.6} inView className="flex items-center gap-2">
+          <BlurFade direction="down" delay={4.5} duration={0.6} inView className="flex flex-col md:flex-row items-center gap-2">
             <Button asChild className="font-bold">
               <Link to="/account">
                 إستقبل العيديات 🎉
