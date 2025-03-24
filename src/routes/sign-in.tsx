@@ -6,7 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { SignInButtons } from '@/components/account/sign-in-botton'
+import { SignInButtons } from '@/components/sign-in-botton'
 
 export const Route = createFileRoute('/sign-in')({
     component: RouteComponent,

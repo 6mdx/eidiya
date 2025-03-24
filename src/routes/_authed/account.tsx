@@ -1,4 +1,5 @@
-import { Button } from '@/components/ui/button'
+import { CreateLinkDailog } from '@/components/account/create-link-dailog'
+import { HeaderProfile } from '@/components/account/header-profile'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authed/account')({
@@ -12,15 +13,12 @@ export const Route = createFileRoute('/_authed/account')({
 })
 
 function RouteComponent() {
-  const { user } = Route.useLoaderData()
+
   return (
-    <div dir='rtl' className="flex flex-col gap-4 p-4">
-      <header className='flex items-center justify-between w-full h-14 border-b'>
-        <h3 className='text-xl font-bold'>يا مرحــبا {user.name} 👋</h3>
-        <div className='flex items-center gap-2'>
-          <Button variant="outline" >إنشاء رابط</Button>
-          <Button variant="destructive" >تسجيل الخروج</Button>
-        </div>
+    <div dir='rtl' className="flex flex-col gap-4 p-4 container mx-auto">
+      <header className='flex items-center justify-between border-b w-full h-12'>
+        <HeaderProfile />
+        <CreateLinkDailog />
       </header>
       <div className='flex'>
 
