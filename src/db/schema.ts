@@ -1,4 +1,8 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core"
+import { pgTable, text, timestamp, boolean, pgEnum, integer } from "drizzle-orm/pg-core"
+import { init, createId } from '@paralleldrive/cuid2';
+import { relations } from "drizzle-orm";
+
+const createShortId = init({ length: 10 });
 
 export const user = pgTable("user", {
 	id: text("id").primaryKey(),
@@ -48,9 +52,56 @@ export const verification = pgTable("verification", {
 
 
 export const link = pgTable("link", {
-  id: text("id").primaryKey(),
-  shortUrl: text('short_url').notNull().unique(),
-  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').notNull()
+	id: text("id").primaryKey().$default(() => createShortId()),
+	userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+	title: text('title').notNull(),
+	welcomeMessage: text('welcome_message'),
+	maxGifts: integer('max_gifts').notNull().default(10),
+	active: boolean('active').notNull().default(true),
+	giftCount: integer('gift_count').notNull().default(0),
+	createdAt: timestamp('created_at').defaultNow().notNull(),
+	updatedAt: timestamp('updated_at').defaultNow().notNull()
 });
+
+
+export const giftEnum = pgEnum('type', ['text', 'voice'])
+
+export const gift = pgTable("gift", {
+	id: text("id").primaryKey().$default(() => createId()),
+	type: giftEnum().notNull(),
+	text: text('text'),
+	fileId: text('file_id'),
+	linkId: text('link_id').notNull().references(() => link.id, { onDelete: 'cascade' }),
+	senderId: text('sender_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+	createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+export const userLinksRelations = relations(user, ({ many }) => ({
+	links: many(link),
+}))
+
+export const linkRelations = relations(link, ({ one }) => ({
+	user: one(user, {
+		fields: [link.userId],
+		references: [user.id]
+	})
+}))
+
+export const linkGiftsRelations = relations(link, ({ many }) => ({
+	gifts: many(gift),
+}))
+
+export const giftRelations = relations(gift, ({ one }) => ({
+	link: one(link, {
+		fields: [gift.linkId],
+		references: [link.id]
+	}),
+	sender: one(user, {
+		fields: [gift.senderId],
+		references: [user.id]
+	})
+}))
+
+export type User = typeof user.$inferSelect
+export type Link = typeof link.$inferSelect
+export type Gift = typeof gift.$inferSelect

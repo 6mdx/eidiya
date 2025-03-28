@@ -10,13 +10,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { authClient } from '@/lib/auth-client'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { getRouteApi, useNavigate } from "@tanstack/react-router"
+import { useNavigate } from "@tanstack/react-router"
 import { Button } from "../ui/button"
 import { Loader } from "lucide-react"
 
-export function HeaderProfile() {
-    const routeApi = getRouteApi('/_authed/account')
-    const { user } = routeApi.useLoaderData()
+type User = {
+    name: string
+    email: string
+    image?: string | null
+}
+
+export function HeaderProfile({ user }: { user: User }) {
     const navigate = useNavigate()
     const { mutate, isPending } = useMutation({
         mutationFn: async () => {
