@@ -29,7 +29,7 @@ export function LinkCard({ id, title, welcomeMessage, giftCount, maxGifts, activ
     return (
         <Card className="overflow-hidden transition-all hover:shadow-md gap-2 flex flex-col">
             <CardHeader className="bg-muted/50 pb-4">
-                <CardTitle className={"flex items-center gap-2 truncate " + (!active && 'line-through')}>
+                <CardTitle className={"flex items-center gap-2 truncate leading-[1.5] " + (!active && 'line-through')}>
                     <Link2 className={"h-4 w-4 " + (active ? 'text-primary' : 'text-destructive')} />
                     {title}
                 </CardTitle>
