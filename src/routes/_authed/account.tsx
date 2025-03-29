@@ -8,7 +8,8 @@ export const Route = createFileRoute('/_authed/account')({
   beforeLoad: ({ context }) => {
     if (!context.session) {
       throw redirect({
-        to: "/sign-in"
+        to: "/sign-in",
+        search: { callbackURL: "/account" },
       })
     } else {
       return { user: context.session }

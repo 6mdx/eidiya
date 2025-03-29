@@ -14,17 +14,26 @@ export async function getLinksByUserId(id: string) {
 }
 
 export async function getLinkById(id: string) {
-    return await db.query.link.findFirst({where: (link, { eq }) => eq(link.id, id)})
+    return await db.query.link.findFirst({
+        where: (link, { eq, and }) => {
+            return and(eq(link.id, id), eq(link.active, true))
+        },
+        columns: {
+            userId: false,
+            updatedAt: false,
+        }
+    }
+    )
 }
 
-export async function addLink(data: Omit<Link, 'id' | 'createdAt' | 'updatedAt' | 'giftCount'>){
-    return await db.insert(link).values(data).returning({id: link.id})
+export async function addLink(data: Omit<Link, 'id' | 'createdAt' | 'updatedAt' | 'giftCount'>) {
+    return await db.insert(link).values(data).returning({ id: link.id })
 }
 
 export async function deleteLink(id: string) {
-    return await db.delete(link).where(eq(link.id, id)).returning({id: link.title})
+    return await db.delete(link).where(eq(link.id, id)).returning({ id: link.title })
 }
 
 export async function updateLink(id: string, data: Partial<Link>) {
-    return await db.update(link).set(data).where(eq(link.id, id)).returning({title: link.title})
+    return await db.update(link).set(data).where(eq(link.id, id)).returning({ title: link.title })
 }

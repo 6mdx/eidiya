@@ -4,14 +4,18 @@ import { useState } from "react"
 import { Loader } from "lucide-react"
 import { Link } from "@tanstack/react-router"
 
-export function SignInButtons() {
+type Props = {
+    callbackURL?: string
+}
+
+export function SignInButtons({ callbackURL }: Props) {
     const [isLoading, setIsLoading] = useState(false)
 
     const onClick = async (provider: "google" | "github") => {
         setIsLoading(true)
         await authClient.signIn.social({
             provider: provider,
-            callbackURL: "/account",
+            callbackURL: callbackURL,
         })
         setIsLoading(false)
     }

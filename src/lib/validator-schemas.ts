@@ -1,4 +1,4 @@
-import { object, string, pipe, minLength, maxLength, InferInput, cuid2, number, minValue, maxValue, integer, boolean, optional, nullable, partial } from 'valibot';
+import { object, string, pipe, minLength, maxLength, InferInput, cuid2, number, minValue, maxValue, integer, boolean, optional, nullable, partial, check } from 'valibot';
 
 
 export const linkFormSchema = object({
@@ -26,15 +26,48 @@ export const updateLinkSchema = object({
         string(),
         cuid2()
     ),
-     updatedData: partial(linkFormSchema)
+    updatedData: partial(linkFormSchema)
 })
 
-export const deleteLinkSchema = object({
+export const linkIdSchema = object({
     id: pipe(
         string(),
         cuid2()
     )
 })
 
+export const sendFormSchema = pipe(object({
+    anonymous: boolean(),
+    name: optional(nullable(pipe(
+        string(),
+        minLength(3, "لا يمكن ان يكون الاسم اقل من 3 حروف"),
+        maxLength(50, "لا يمكن ان يكون الاسم اكثر من 50 حرف")
+    ))),
+    message: pipe(
+        string(),
+        minLength(10, "لا يمكن أن تكون الرسالة أقل من 10 أحرف."),
+        maxLength(250, "لا يمكن أن تكون الرسالة أكثر من 250 حرف.")
+    ),
+}),
+    check(
+        (input) => !(!input.anonymous && !input.name), "لازم تكتب الإسم إذا ماكنت مجهول"
+    )
+)
 
+export const giftAddSchema = object({
+    linkId: pipe(
+        string(),
+        cuid2()
+    ),
+    gift: sendFormSchema
+})
+
+export const getGiftsSchema = object({
+    linkId: pipe(
+        string(),
+        cuid2()
+    )
+})
+
+export type SendFormSchema = InferInput<typeof sendFormSchema>
 export type LinkFormSchema = InferInput<typeof linkFormSchema>

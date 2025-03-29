@@ -69,6 +69,8 @@ export const giftEnum = pgEnum('type', ['text', 'voice'])
 export const gift = pgTable("gift", {
 	id: text("id").primaryKey().$default(() => createId()),
 	type: giftEnum().notNull(),
+	anonymous: boolean('anonymous').notNull().default(false),
+	name: text('name'),
 	text: text('text'),
 	fileId: text('file_id'),
 	linkId: text('link_id').notNull().references(() => link.id, { onDelete: 'cascade' }),

@@ -11,12 +11,20 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SuccessImport } from './routes/success'
 import { Route as SignInImport } from './routes/sign-in'
 import { Route as AuthedImport } from './routes/_authed'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthedAccountImport } from './routes/_authed/account'
+import { Route as AuthedLinkIdImport } from './routes/_authed/$linkId'
 
 // Create/Update Routes
+
+const SuccessRoute = SuccessImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const SignInRoute = SignInImport.update({
   id: '/sign-in',
@@ -38,6 +46,12 @@ const IndexRoute = IndexImport.update({
 const AuthedAccountRoute = AuthedAccountImport.update({
   id: '/account',
   path: '/account',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedLinkIdRoute = AuthedLinkIdImport.update({
+  id: '/$linkId',
+  path: '/$linkId',
   getParentRoute: () => AuthedRoute,
 } as any)
 
@@ -66,6 +80,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInImport
       parentRoute: typeof rootRoute
     }
+    '/success': {
+      id: '/success'
+      path: '/success'
+      fullPath: '/success'
+      preLoaderRoute: typeof SuccessImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authed/$linkId': {
+      id: '/_authed/$linkId'
+      path: '/$linkId'
+      fullPath: '/$linkId'
+      preLoaderRoute: typeof AuthedLinkIdImport
+      parentRoute: typeof AuthedImport
+    }
     '/_authed/account': {
       id: '/_authed/account'
       path: '/account'
@@ -79,10 +107,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AuthedRouteChildren {
+  AuthedLinkIdRoute: typeof AuthedLinkIdRoute
   AuthedAccountRoute: typeof AuthedAccountRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
+  AuthedLinkIdRoute: AuthedLinkIdRoute,
   AuthedAccountRoute: AuthedAccountRoute,
 }
 
@@ -93,6 +123,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthedRouteWithChildren
   '/sign-in': typeof SignInRoute
+  '/success': typeof SuccessRoute
+  '/$linkId': typeof AuthedLinkIdRoute
   '/account': typeof AuthedAccountRoute
 }
 
@@ -100,6 +132,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthedRouteWithChildren
   '/sign-in': typeof SignInRoute
+  '/success': typeof SuccessRoute
+  '/$linkId': typeof AuthedLinkIdRoute
   '/account': typeof AuthedAccountRoute
 }
 
@@ -108,15 +142,24 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
   '/sign-in': typeof SignInRoute
+  '/success': typeof SuccessRoute
+  '/_authed/$linkId': typeof AuthedLinkIdRoute
   '/_authed/account': typeof AuthedAccountRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/sign-in' | '/account'
+  fullPaths: '/' | '' | '/sign-in' | '/success' | '/$linkId' | '/account'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/sign-in' | '/account'
-  id: '__root__' | '/' | '/_authed' | '/sign-in' | '/_authed/account'
+  to: '/' | '' | '/sign-in' | '/success' | '/$linkId' | '/account'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authed'
+    | '/sign-in'
+    | '/success'
+    | '/_authed/$linkId'
+    | '/_authed/account'
   fileRoutesById: FileRoutesById
 }
 
@@ -124,12 +167,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthedRoute: typeof AuthedRouteWithChildren
   SignInRoute: typeof SignInRoute
+  SuccessRoute: typeof SuccessRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthedRoute: AuthedRouteWithChildren,
   SignInRoute: SignInRoute,
+  SuccessRoute: SuccessRoute,
 }
 
 export const routeTree = rootRoute
@@ -144,7 +189,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/_authed",
-        "/sign-in"
+        "/sign-in",
+        "/success"
       ]
     },
     "/": {
@@ -153,11 +199,19 @@ export const routeTree = rootRoute
     "/_authed": {
       "filePath": "_authed.tsx",
       "children": [
+        "/_authed/$linkId",
         "/_authed/account"
       ]
     },
     "/sign-in": {
       "filePath": "sign-in.tsx"
+    },
+    "/success": {
+      "filePath": "success.tsx"
+    },
+    "/_authed/$linkId": {
+      "filePath": "_authed/$linkId.tsx",
+      "parent": "/_authed"
     },
     "/_authed/account": {
       "filePath": "_authed/account.tsx",

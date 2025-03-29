@@ -1,6 +1,6 @@
-import { addLink, deleteLink, getLinksByUserId, updateLink } from "@/data-access/link";
+import { addLink, deleteLink, getLinkById, getLinksByUserId, updateLink } from "@/data-access/link";
 import { authMiddleware } from "@/lib/auth-middleware";
-import { deleteLinkSchema, linkFormSchema, updateLinkSchema } from "@/lib/validator-schemas";
+import { linkIdSchema, linkFormSchema, updateLinkSchema } from "@/lib/validator-schemas";
 import { createServerFn } from "@tanstack/react-start";
 
 
@@ -28,7 +28,14 @@ export const getLinks = createServerFn({method:"GET"}).middleware([authMiddlewar
 })
 
 
-export const deleteLinkFn = createServerFn({method:"POST"}).middleware([authMiddleware]).validator(deleteLinkSchema).handler(async ({data , context}) => {
+export const deleteLinkFn = createServerFn({method:"POST"}).middleware([authMiddleware]).validator(linkIdSchema).handler(async ({data , context}) => {
     const { id } = data
     return await deleteLink(id)
+})
+
+export const getPublicLink = createServerFn({method:"GET"}).validator(linkIdSchema).handler(async ({ data }) => {
+    const link = await getLinkById(data.id)
+    if(!link) return null
+    const { giftCount, maxGifts, ...rest } = link
+    return {...rest, isFull: giftCount >= maxGifts}
 })
