@@ -1,5 +1,5 @@
 import { getLinks } from "@/serverFn/links"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { LinkCard } from "./link-card"
 import { CreateLinkDailog } from "./create-link-dailog"
@@ -30,7 +30,7 @@ export function LinksList() {
         )
     }
     return (
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4'>
             {data.map((link) => (
                 <LinkCard key={link.id} {...link} />
             ))}
