@@ -20,8 +20,17 @@ import {
 } from "@/components/ui/drawer"
 import { useState } from "react"
 import { LinkForm } from "./create-edit-form"
+import { Settings } from "lucide-react"
+import { LinkFormSchema } from "@/lib/validator-schemas"
 
-export function CreateLinkDailog() {
+
+type Props = {
+  linkData: LinkFormSchema & {
+    id: string
+  }
+}
+
+export function EditLinkDailog({ linkData }: Props) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -29,16 +38,18 @@ export function CreateLinkDailog() {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>إنشاء رابط</Button>
+          <Button variant="ghost" size="icon" title="Settings">
+            <Settings className="h-4 w-4" />
+          </Button>
         </DialogTrigger>
         <DialogContent dir="rtl" className="sm:max-w-[425px]">
           <DialogHeader className="text-right sm:text-right">
-            <DialogTitle>إنشاء رابط</DialogTitle>
+            <DialogTitle>تعديل الرابط</DialogTitle>
             <DialogDescription>
-              سويلك رابط عشان تقدر تستقبل العيديات 🎁
+              عدل بيانات الرابط 📝
             </DialogDescription>
           </DialogHeader>
-          <LinkForm mode="create" closeModal={() => setOpen(false)} />
+          <LinkForm id={linkData.id} mode="edit" defaultValues={linkData} closeModal={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
     )
@@ -47,16 +58,18 @@ export function CreateLinkDailog() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button>إنشاء رابط</Button>
+        <Button variant="ghost" size="icon" title="Settings">
+          <Settings className="h-4 w-4" />
+        </Button>
       </DrawerTrigger>
       <DrawerContent dir="rtl">
         <DrawerHeader>
-          <DrawerTitle>إنشاء رابط</DrawerTitle>
+          <DrawerTitle>تعديل الرابط</DrawerTitle>
           <DrawerDescription>
-            سويلك رابط عشان تقدر تستقبل العيديات 🎁
+            عدل بيانات الرابط 📝
           </DrawerDescription>
         </DrawerHeader>
-        <LinkForm mode="create" closeModal={() => setOpen(false)} className="px-4" />
+        <LinkForm id={linkData.id} mode="edit" defaultValues={linkData} closeModal={() => setOpen(false)} className="px-4" />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">إغلاق</Button>

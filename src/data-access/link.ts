@@ -17,7 +17,7 @@ export async function getLinkById(id: string) {
     return await db.query.link.findFirst({where: (link, { eq }) => eq(link.id, id)})
 }
 
-export async function addLink(data: Omit<Link, 'id' | 'createdAt' | 'updatedAt' | 'giftCount' | 'active'>){
+export async function addLink(data: Omit<Link, 'id' | 'createdAt' | 'updatedAt' | 'giftCount'>){
     return await db.insert(link).values(data).returning({id: link.id})
 }
 
@@ -26,5 +26,5 @@ export async function deleteLink(id: string) {
 }
 
 export async function updateLink(id: string, data: Partial<Link>) {
-    return await db.update(link).set(data).where(eq(link.id, id) )
+    return await db.update(link).set(data).where(eq(link.id, id)).returning({title: link.title})
 }
