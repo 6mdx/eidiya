@@ -20,16 +20,23 @@ import {
 } from "@/components/ui/drawer"
 import { useState } from "react"
 import { LinkForm } from "./create-edit-form"
+import { useQuery } from "@tanstack/react-query"
+import { getLinks } from "@/serverFn/links"
 
 export function CreateLinkDailog() {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
+  const { data } = useQuery({
+    queryKey: ['links'],
+    queryFn: () => getLinks(),
+    staleTime: 1000 * 60
+  })
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>إنشاء رابط</Button>
+          <Button disabled={data && data.length >= 10}>إنشاء رابط</Button>
         </DialogTrigger>
         <DialogContent dir="rtl" className="sm:max-w-[425px]">
           <DialogHeader className="text-right sm:text-right">

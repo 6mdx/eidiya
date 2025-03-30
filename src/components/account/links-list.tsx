@@ -8,7 +8,8 @@ import { CreateLinkDailog } from "./create-link-dailog"
 export function LinksList() {
     const { data, isLoading, isError } = useQuery({
         queryKey: ['links'],
-        queryFn: () => getLinks()
+        queryFn: () => getLinks(),
+        staleTime: 1000 * 60
     })
     if (isLoading || isError) {
         return (

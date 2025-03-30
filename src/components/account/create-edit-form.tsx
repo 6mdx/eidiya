@@ -44,6 +44,13 @@ export function LinkForm({ className, id, closeModal, mode, defaultValues }: Pro
                 }
             })
         },
+        onError: (error: Error) => {
+            if(error.message === "max_links_reached"){
+                toast.error('ماتقدر تسوي اكثر من 10 روابط ماعليش 😥')
+                return
+            }
+            toast.error('حدث خطأ ما')
+        }
     })
 
     const form = useForm({

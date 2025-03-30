@@ -9,7 +9,8 @@ export async function getLinksByUserId(id: string) {
         columns: {
             userId: false,
             updatedAt: false,
-        }
+        },
+        limit: 10
     })
 }
 

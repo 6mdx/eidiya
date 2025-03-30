@@ -1,4 +1,4 @@
-import { addLink, deleteLink, getLinkById, getLinksByUserId, updateLink } from "@/data-access/link";
+import { addLink, deleteLink, getLinkById, getLinksByUserId, getLinksCount, updateLink } from "@/data-access/link";
 import { authMiddleware } from "@/lib/auth-middleware";
 import { linkIdSchema, linkFormSchema, updateLinkSchema } from "@/lib/validator-schemas";
 import { createServerFn } from "@tanstack/react-start";
@@ -7,6 +7,8 @@ import { createServerFn } from "@tanstack/react-start";
 export const createLink = createServerFn({method:"POST"}).middleware([authMiddleware]).validator(linkFormSchema).handler(async ({data , context}) => {
     const { session } = context
     const { welcomeMessage, ...rest } = data
+    const linksCount = await getLinksCount(session.user.id)
+    if(linksCount[0].count >= 10) throw new Error("max_links_reached")
     const link = await addLink({
         userId: session.user.id,
         welcomeMessage: data.welcomeMessage || null,
