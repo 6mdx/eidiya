@@ -81,6 +81,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html>
       <head>
         <HeadContent />
+        <script defer src="https://umami.lazydevs.co/script.js" data-website-id="0a1e37a5-922b-4625-9740-1ef3a6856599"></script>
       </head>
       <body className='min-h-svh antialiased'>
         {children}
