@@ -1,6 +1,6 @@
-import { pgTable, text, timestamp, boolean, pgEnum, integer } from "drizzle-orm/pg-core"
+import { pgTable, text, timestamp, boolean, pgEnum, integer, index } from "drizzle-orm/pg-core"
 import { init, createId } from '@paralleldrive/cuid2';
-import { relations } from "drizzle-orm";
+import { relations } from "drizzle-orm";;
 
 const createShortId = init({ length: 10 });
 
@@ -76,7 +76,11 @@ export const gift = pgTable("gift", {
 	linkId: text('link_id').notNull().references(() => link.id, { onDelete: 'cascade' }),
 	senderId: text('sender_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
-})
+}, (table) => [
+	index("link_id_idx").on(table.linkId),
+	index("sender_id_idx").on(table.senderId),
+	index("link_id_sender_id_idx").on(table.linkId, table.senderId),
+])
 
 export const userLinksRelations = relations(user, ({ many }) => ({
 	links: many(link),

@@ -17,6 +17,7 @@ import { Route as AuthedImport } from './routes/_authed'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthedAccountImport } from './routes/_authed/account'
 import { Route as AuthedLinkIdImport } from './routes/_authed/$linkId'
+import { Route as AuthedGiftsLinkIdImport } from './routes/_authed/gifts.$linkId'
 
 // Create/Update Routes
 
@@ -52,6 +53,12 @@ const AuthedAccountRoute = AuthedAccountImport.update({
 const AuthedLinkIdRoute = AuthedLinkIdImport.update({
   id: '/$linkId',
   path: '/$linkId',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedGiftsLinkIdRoute = AuthedGiftsLinkIdImport.update({
+  id: '/gifts/$linkId',
+  path: '/gifts/$linkId',
   getParentRoute: () => AuthedRoute,
 } as any)
 
@@ -101,6 +108,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedAccountImport
       parentRoute: typeof AuthedImport
     }
+    '/_authed/gifts/$linkId': {
+      id: '/_authed/gifts/$linkId'
+      path: '/gifts/$linkId'
+      fullPath: '/gifts/$linkId'
+      preLoaderRoute: typeof AuthedGiftsLinkIdImport
+      parentRoute: typeof AuthedImport
+    }
   }
 }
 
@@ -109,11 +123,13 @@ declare module '@tanstack/react-router' {
 interface AuthedRouteChildren {
   AuthedLinkIdRoute: typeof AuthedLinkIdRoute
   AuthedAccountRoute: typeof AuthedAccountRoute
+  AuthedGiftsLinkIdRoute: typeof AuthedGiftsLinkIdRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedLinkIdRoute: AuthedLinkIdRoute,
   AuthedAccountRoute: AuthedAccountRoute,
+  AuthedGiftsLinkIdRoute: AuthedGiftsLinkIdRoute,
 }
 
 const AuthedRouteWithChildren =
@@ -126,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/success': typeof SuccessRoute
   '/$linkId': typeof AuthedLinkIdRoute
   '/account': typeof AuthedAccountRoute
+  '/gifts/$linkId': typeof AuthedGiftsLinkIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -135,6 +152,7 @@ export interface FileRoutesByTo {
   '/success': typeof SuccessRoute
   '/$linkId': typeof AuthedLinkIdRoute
   '/account': typeof AuthedAccountRoute
+  '/gifts/$linkId': typeof AuthedGiftsLinkIdRoute
 }
 
 export interface FileRoutesById {
@@ -145,13 +163,28 @@ export interface FileRoutesById {
   '/success': typeof SuccessRoute
   '/_authed/$linkId': typeof AuthedLinkIdRoute
   '/_authed/account': typeof AuthedAccountRoute
+  '/_authed/gifts/$linkId': typeof AuthedGiftsLinkIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/sign-in' | '/success' | '/$linkId' | '/account'
+  fullPaths:
+    | '/'
+    | ''
+    | '/sign-in'
+    | '/success'
+    | '/$linkId'
+    | '/account'
+    | '/gifts/$linkId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/sign-in' | '/success' | '/$linkId' | '/account'
+  to:
+    | '/'
+    | ''
+    | '/sign-in'
+    | '/success'
+    | '/$linkId'
+    | '/account'
+    | '/gifts/$linkId'
   id:
     | '__root__'
     | '/'
@@ -160,6 +193,7 @@ export interface FileRouteTypes {
     | '/success'
     | '/_authed/$linkId'
     | '/_authed/account'
+    | '/_authed/gifts/$linkId'
   fileRoutesById: FileRoutesById
 }
 
@@ -200,7 +234,8 @@ export const routeTree = rootRoute
       "filePath": "_authed.tsx",
       "children": [
         "/_authed/$linkId",
-        "/_authed/account"
+        "/_authed/account",
+        "/_authed/gifts/$linkId"
       ]
     },
     "/sign-in": {
@@ -215,6 +250,10 @@ export const routeTree = rootRoute
     },
     "/_authed/account": {
       "filePath": "_authed/account.tsx",
+      "parent": "/_authed"
+    },
+    "/_authed/gifts/$linkId": {
+      "filePath": "_authed/gifts.$linkId.tsx",
       "parent": "/_authed"
     }
   }

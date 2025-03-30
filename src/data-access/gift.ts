@@ -1,13 +1,17 @@
 import { db } from "@/db/client"
 import { gift } from "@/db/schema"
 import { SendFormSchema } from "@/lib/validator-schemas"
+import { and, eq } from "drizzle-orm"
 
 export async function getGiftsByLinkId(id: string) {
     return await db.query.gift.findMany({
         where: (gift, { eq }) => eq(gift.linkId, id),
         columns: {
-           senderId:false
-        }
+           senderId:false,
+           fileId: false,
+           type: false
+        },
+        limit:100
     })
 }
 
@@ -35,4 +39,8 @@ export async function addGift(data: SendFormSchema & { linkId: string, senderID:
         linkId: data.linkId,
         senderId: data.senderID
     }).returning({ id: gift.id })
+}
+
+export async function deleteGift(id: string, linkId: string) {
+    return await db.delete(gift).where(and(eq(gift.id, id), eq(gift.linkId, linkId))).returning({ id: gift.id })
 }

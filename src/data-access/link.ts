@@ -1,6 +1,6 @@
 import { db } from "@/db/client";
 import { Link, link } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 
 
 export async function getLinksByUserId(id: string) {
@@ -24,6 +24,16 @@ export async function getLinkById(id: string) {
         }
     }
     )
+}
+
+export async function getLinkByIdAndUserId(id: string, userId: string) {
+    return await db.query.link.findFirst({
+        where: (link, { eq, and }) => and(eq(link.id, id), eq(link.userId, userId))
+    })
+}
+
+export async function getLinksCount(userId: string) {
+    return await db.select({ count: count()}).from(link).where(eq(link.userId, userId))
 }
 
 export async function addLink(data: Omit<Link, 'id' | 'createdAt' | 'updatedAt' | 'giftCount'>) {

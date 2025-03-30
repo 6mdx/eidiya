@@ -62,6 +62,17 @@ export const giftAddSchema = object({
     gift: sendFormSchema
 })
 
+export const giftDeleteSchema = object({
+    id: pipe(
+        string(),
+        cuid2()
+    ),
+    linkId: pipe(
+        string(),
+        cuid2()
+    )
+})
+
 export const getGiftsSchema = object({
     linkId: pipe(
         string(),

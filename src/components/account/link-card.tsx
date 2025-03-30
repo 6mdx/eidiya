@@ -11,6 +11,7 @@ import { Button } from "../ui/button"
 import { DeleteLinkDailog } from "./delete-link-dailog"
 import { EditLinkDailog } from "./edit-link-dailog"
 import { SharePopover } from "./share-popover"
+import { Link } from "@tanstack/react-router"
 
 
 type Props = {
@@ -43,14 +44,16 @@ export function LinkCard({ id, title, welcomeMessage, giftCount, maxGifts, activ
             </CardContent>
             <CardFooter className="flex justify-between border-t bg-muted/30 px-6 py-3">
                 <div className="flex items-center gap-2">
-                    <Button dir="ltr" variant="outline" className="items-center" title="View gifts">
-                    <span className="mt-1">{giftCount} /{maxGifts}</span>
-                        <Gift className="h-4 w-4" />
+                    <Button dir="ltr" variant="outline" className="items-center" title="View gifts" asChild>
+                        <Link to={"/gifts/$linkId"} params={{ linkId: id }}>
+                            <span className="mt-1">{giftCount} /{maxGifts}</span>
+                            <Gift className="h-4 w-4" />
+                        </Link>
                     </Button>
                     <SharePopover linkId={id} active={active} />
                 </div>
                 <div className="flex items-center gap-2">
-                    <EditLinkDailog linkData={{ id, title, welcomeMessage, maxGifts, active }}/>
+                    <EditLinkDailog linkData={{ id, title, welcomeMessage, maxGifts, active }} />
                     <DeleteLinkDailog id={id} title={title} />
                 </div>
             </CardFooter>
