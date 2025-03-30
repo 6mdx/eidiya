@@ -10,7 +10,8 @@
     "db:studio": "drizzle-kit studio",
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start"
+    "start": "vinxi start",
+    "production:build": "drizzle-kit generate && drizzle-kit push && vinxi build"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
