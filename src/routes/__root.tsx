@@ -31,7 +31,7 @@ export const Route = createRootRouteWithContext<{
         title:
           'eidiya - عيدية',
         description: `إستقبل العيديات المعنوية وخليك من الماديات ✨`,
-        image: '/og-image.png',
+        image: 'https://eidiya.sagebot.co/og-image.png',
       }),
     ],
     links: [
